@@ -89,10 +89,10 @@ function defineRefPropWarningGetter(props, displayName) {
 }
 
 /**
- * Factory method to create a new React element. This no longer adheres to
- * the class pattern, so do not use new to call it. Also, no instanceof check
- * will work. Instead test $$typeof field against Symbol.for('react.element') to check
- * if something is a React Element.
+ * 创建新的react元素的工厂方法。这不再坚持
+ * 类模式，因此不要使用new来调用它。另外，没有检查实例
+ * 会有用的。相反，根据symbol.for（“react.element”）测试$$typeof字段以进行检查
+ * 如果某物是反应元素。
  *
  * @param {*} type
  * @param {*} props
@@ -100,55 +100,55 @@ function defineRefPropWarningGetter(props, displayName) {
  * @param {string|object} ref
  * @param {*} owner
  * @param {*} self A *temporary* helper to detect places where `this` is
- * different from the `owner` when React.createElement is called, so that we
- * can warn. We want to get rid of owner and replace string `ref`s with arrow
- * functions, and as long as `this` and owner are the same, there will be no
- * change in behavior.
+ * 与调用react.createElement时的“owner”不同，因此
+ * 可以发出警告。我们要去掉所有者并用箭头替换字符串'ref's
+ * 函数，只要“this”和“owner”相同，就不会有
+ * 行为改变。
  * @param {*} source An annotation object (added by a transpiler or otherwise)
  * indicating filename, line number, and/or other information.
  * @internal
  */
 const ReactElement = function(type, key, ref, self, source, owner, props) {
   const element = {
-    // This tag allows us to uniquely identify this as a React Element
+    // 此标记允许我们唯一地将其标识为react元素
     $$typeof: REACT_ELEMENT_TYPE,
 
-    // Built-in properties that belong on the element
+    // 属于元素的内置属性
     type: type,
     key: key,
     ref: ref,
     props: props,
 
-    // Record the component responsible for creating this element.
+    // 记录负责创建此元素的组件。
     _owner: owner,
   };
 
   if (__DEV__) {
-    // The validation flag is currently mutative. We put it on
-    // an external backing store so that we can freeze the whole object.
-    // This can be replaced with a WeakMap once they are implemented in
-    // commonly used development environments.
+    // 验证标志当前是可变的。我们穿上它
+    // 一个外部备份存储，以便冻结整个对象。
+    // 一旦在中实现了weakmap，就可以将其替换为weakmap
+    // 常用的开发环境。
     element._store = {};
 
-    // To make comparing ReactElements easier for testing purposes, we make
-    // the validation flag non-enumerable (where possible, which should
-    // include every environment we run tests in), so the test framework
-    // ignores it.
+    // 为了使比较反应元素更容易进行测试，我们
+    // 验证标志不可枚举（如果可能，应该
+    // 包括我们在其中运行测试的每个环境），因此测试框架
+    // 忽略它。
     Object.defineProperty(element._store, 'validated', {
       configurable: false,
       enumerable: false,
       writable: true,
       value: false,
     });
-    // self and source are DEV only properties.
+    // self和source是仅适用于开发人员的属性。
     Object.defineProperty(element, '_self', {
       configurable: false,
       enumerable: false,
       writable: false,
       value: self,
     });
-    // Two elements created in two different places should be considered
-    // equal for testing purposes and therefore we hide it from enumeration.
+    // 应考虑在两个不同位置创建的两个元素
+    // 为测试目的相等，因此我们将其隐藏在枚举中。
     Object.defineProperty(element, '_source', {
       configurable: false,
       enumerable: false,
@@ -173,7 +173,7 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
 export function jsx(type, config, maybeKey) {
   let propName;
 
-  // Reserved names are extracted
+  // 提取保留名称
   const props = {};
 
   let key = null;
@@ -187,7 +187,7 @@ export function jsx(type, config, maybeKey) {
     key = '' + config.key;
   }
 
-  // Remaining properties are added to a new props object
+  // 将剩余属性添加到新的props对象中
   for (propName in config) {
     if (
       hasOwnProperty.call(config, propName) &&
@@ -197,8 +197,8 @@ export function jsx(type, config, maybeKey) {
     }
   }
 
-  // intentionally not checking if key was set above
-  // this key is higher priority as it's static
+  // 故意不检查上面是否设置了密钥
+  // 该键具有较高的优先级，因为它是静态的
   if (maybeKey !== undefined) {
     key = '' + maybeKey;
   }
@@ -391,11 +391,11 @@ export function createElement(type, config, children) {
  */
 export function createFactory(type) {
   const factory = createElement.bind(null, type);
-  // Expose the type on the factory and the prototype so that it can be
-  // easily accessed on elements. E.g. `<Foo />.type === Foo`.
-  // This should not be named `constructor` since this may not be the function
-  // that created the element, and it may not even be a constructor.
-  // Legacy hook: remove it
+  // 在工厂和原型上公开类型，以便
+  // 在元素上很容易访问。例如，`<foo/>类型==foo`。
+  // 不应将其命名为“constructor”，因为它可能不是函数
+  // 创建了元素，它甚至可能不是构造函数。
+  // 旧钩子：移除它
   factory.type = type;
   return factory;
 }
@@ -435,17 +435,17 @@ export function cloneElement(element, config, children) {
   let ref = element.ref;
   // Self is preserved since the owner is preserved.
   const self = element._self;
-  // Source is preserved since cloneElement is unlikely to be targeted by a
-  // transpiler, and the original source is probably a better indicator of the
-  // true owner.
+  // 由于克隆不太可能被
+  // 蒸腾器，原始源可能是
+  // 真正的所有者。
   const source = element._source;
 
-  // Owner will be preserved, unless ref is overridden
+  // 除非重写引用，否则将保留所有者
   let owner = element._owner;
 
   if (config != null) {
     if (hasValidRef(config)) {
-      // Silently steal the ref from the parent.
+      //悄悄地从父级窃取引用。
       ref = config.ref;
       owner = ReactCurrentOwner.current;
     }
@@ -453,7 +453,7 @@ export function cloneElement(element, config, children) {
       key = '' + config.key;
     }
 
-    // Remaining properties override existing props
+    // 其余属性重写现有属性
     let defaultProps;
     if (element.type && element.type.defaultProps) {
       defaultProps = element.type.defaultProps;
@@ -473,8 +473,8 @@ export function cloneElement(element, config, children) {
     }
   }
 
-  // Children can be more than one argument, and those are transferred onto
-  // the newly allocated props object.
+  // 子级可以是多个参数，并且这些参数被转移到
+  // 新分配的props对象。
   const childrenLength = arguments.length - 2;
   if (childrenLength === 1) {
     props.children = children;

@@ -1,8 +1,8 @@
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * 此源代码是根据在
+ * 此源树根目录中的许可证文件。
  */
 
 import ReactVersion from 'shared/ReactVersion';
@@ -114,10 +114,10 @@ if (enableFundamentalAPI) {
   React.unstable_createFundamental = createFundamental;
 }
 
-// Note: some APIs are added with feature flags.
-// Make sure that stable builds for open source
-// don't modify the React object to avoid deopts.
-// Also let's not expose their names in stable builds.
+// 注意：有些API添加了功能标志。
+// 确保稳定的开源版本
+// 不要修改react对象以避免Deopts。
+// 另外，我们不要在稳定的构建中公开它们的名称。
 
 if (enableJSXTransformAPI) {
   if (__DEV__) {
@@ -126,8 +126,8 @@ if (enableJSXTransformAPI) {
     React.jsxs = jsxWithValidationStatic;
   } else {
     React.jsx = jsx;
-    // we may want to special case jsxs internally to take advantage of static children.
-    // for now we can ship identical prod functions
+    //我们可能希望在内部使用特殊情况的JSX来利用静态子对象。
+    //目前我们可以提供相同的prod函数
     React.jsxs = jsx;
   }
 }
